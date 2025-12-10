@@ -8,9 +8,8 @@ import News from '@/components/News';
 import ResearchScope from '@/components/ResearchScope';
 import Footer from '@/components/Footer';
 
-
 export default function Home() {
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
@@ -18,39 +17,31 @@ export default function Home() {
 
   return (
     <main
-      className={`min-h-screen ${
-        isDarkMode ? 'bg-gray-100 text-gray-900' : 'bg-gray-500 text-white'
+      className={`min-h-screen transition-colors duration-300 ${
+        isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'
       }`}
     >
-
       <div className="fixed top-0 left-0 w-full z-50">
         <Navbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
       </div>
 
-
-    <div className="pt-20"> 
+      <div className="pt-32">
         <div className="container mx-auto px-4 py-8">
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8 mt-12">
-            
-            
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             <div className="space-y-4">
-              <HeroSection />
+              <HeroSection isDarkMode={isDarkMode} />
             </div>
 
-            
             <div className="space-y-4">
-              <AboutUs />
-              <News />
+              <AboutUs isDarkMode={isDarkMode} />
+              <News isDarkMode={isDarkMode} />
             </div>
-
           </div>
 
-          {/* Research Scope Section */}
-          <ResearchScope />
+          <ResearchScope isDarkMode={isDarkMode} />
         </div>
 
-        <Footer />
+        <Footer isDarkMode={isDarkMode} />
       </div>
     </main>
   );

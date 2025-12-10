@@ -1,9 +1,13 @@
-
+// components/ResearchScope.tsx
 interface ScopeItem {
   id: number;
   title: string;
   description: string;
   img: string;
+}
+
+interface ResearchScopeProps {
+  isDarkMode: boolean;
 }
 
 const scopeData: ScopeItem[] = [
@@ -57,10 +61,16 @@ const scopeData: ScopeItem[] = [
   },
 ];
 
-export default function ResearchScope() {
+export default function ResearchScope({ isDarkMode }: ResearchScopeProps) {
   return (
-    <div className="bg-[#666] rounded-2xl shadow-xl p-8">
-      <h2 className="text-3xl font-bold mb-8 border-b pb-4 text-white">
+    <div className={`rounded-2xl shadow-xl p-8 transition-all duration-300 ${
+      isDarkMode ? 'bg-gray-800' : 'bg-[#666]'
+    }`}>
+      <h2 className={`text-3xl font-bold mb-8 pb-4 transition-colors duration-300 ${
+        isDarkMode 
+          ? 'border-b border-gray-700 text-white' 
+          : 'border-b border-gray-600 text-white'
+      }`}>
         Research Scope
       </h2>
 
@@ -68,7 +78,9 @@ export default function ResearchScope() {
         {scopeData.map((item) => (
           <div
             key={item.id}
-            className="bg-gray-100 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition"
+            className={`rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-105 ${
+              isDarkMode ? 'bg-gray-700' : 'bg-gray-100'
+            }`}
           >
             <img
               src={item.img}
@@ -77,15 +89,23 @@ export default function ResearchScope() {
             />
 
             <div className="p-4">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className={`text-lg font-semibold mb-2 transition-colors duration-300 ${
+                isDarkMode ? 'text-orange-400' : 'text-gray-900'
+              }`}>
                 {item.title}
               </h3>
 
-              <p className="text-gray-600 text-sm mb-4">
+              <p className={`text-sm mb-4 transition-colors duration-300 ${
+                isDarkMode ? 'text-gray-300' : 'text-gray-600'
+              }`}>
                 {item.description}
               </p>
 
-              <button className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition w-full">
+              <button className={`px-4 py-2 rounded-lg transition-all duration-300 w-full ${
+                isDarkMode 
+                  ? 'bg-orange-500 hover:bg-orange-600 text-white' 
+                  : 'bg-orange-500 hover:bg-orange-600 text-white'
+              }`}>
                 Learn More
               </button>
             </div>
