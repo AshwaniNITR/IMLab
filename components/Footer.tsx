@@ -1,7 +1,13 @@
 import { Facebook, Twitter, Instagram, Youtube, Mail, MapPin, Phone } from "lucide-react";
 
-export default function Footer() {
-  const footerData = [
+type FooterColumn = {
+  title: string;
+  links?: string[];
+  isContact?: boolean;
+};
+
+export default function Footer({ isDarkMode }: { isDarkMode: boolean }) {
+  const footerData: FooterColumn[] = [
     {
       title: "Quick Links",
       links: [
@@ -34,7 +40,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-300 py-16 mt-6">
+    <footer className={`${isDarkMode ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-300' : 'bg-gradient-to-br from-gray-400 via-gray-50 to-gray-500 text-gray-700'} py-16 rounded-t-4xl mt-1.5`}>
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-6">
           
@@ -51,7 +57,7 @@ export default function Footer() {
                     {socialMedia.map(({ Icon, label }) => (
                       <a
                         key={label}
-                        className="bg-gray-700 hover:bg-orange-500 p-3 rounded-full transition-all duration-300 transform hover:scale-110 cursor-pointer"
+                        className={`${isDarkMode ? 'bg-gray-700 hover:bg-orange-500' : 'bg-gray-200 hover:bg-orange-500'} p-3 rounded-full transition-all duration-300 transform hover:scale-110 cursor-pointer`}
                         aria-label={label}
                       >
                         <Icon size={16} />
@@ -81,7 +87,7 @@ export default function Footer() {
                 </div>
               ) : (
                 <ul className="space-y-3">
-                  {column.links.map((link, linkIndex) => (
+                  {column.links?.map((link, linkIndex) => (
                     <li
                       key={linkIndex}
                       className="text-sm hover:text-orange-300 hover:translate-x-2 transition-all duration-200 cursor-pointer"
@@ -96,12 +102,12 @@ export default function Footer() {
           
         </div>
 
-        <div className="border-t border-gray-700 pt-8 mt-8">
+        <div className={`border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-300'} pt-8 mt-8`}>
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-sm text-gray-400">
+            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
               © {new Date().getFullYear()} National Institute of Technology Rourkela. All Rights Reserved.
             </p>
-            <div className="flex space-x-6 text-sm text-gray-400">
+            <div className={`flex space-x-6 text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
               <a className="hover:text-orange-300 cursor-pointer transition-colors">Privacy Policy</a>
               <span>|</span>
               <a className="hover:text-orange-300 cursor-pointer transition-colors">Terms of Service</a>
