@@ -41,7 +41,7 @@ export default function Home() {
           <ResearchScope isDarkMode={isDarkMode} />
         </div>
 
-        <Footer isDarkMode={isDarkMode} />
+        <Footer />
       </div>
     </main>
   );

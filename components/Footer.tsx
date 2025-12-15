@@ -81,7 +81,7 @@ export default function Footer() {
                 </div>
               ) : (
                 <ul className="space-y-3">
-                  {column.links.map((link, linkIndex) => (
+                  {column.links!.map((link, linkIndex) => (
                     <li
                       key={linkIndex}
                       className="text-sm hover:text-orange-300 hover:translate-x-2 transition-all duration-200 cursor-pointer"
