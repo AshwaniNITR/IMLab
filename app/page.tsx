@@ -7,6 +7,7 @@ import AboutUs from '@/components/AboutUs';
 import News from '@/components/News';
 import ResearchScope from '@/components/ResearchScope';
 import Footer from '@/components/Footer';
+import RecentPublications from '@/components/RecentPublications';
 
 export default function Home() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -39,7 +40,11 @@ export default function Home() {
           </div>
 
           <ResearchScope isDarkMode={isDarkMode} />
+          <div className="mt-12">
+             <RecentPublications isDarkMode={isDarkMode} />
+          </div>
         </div>
+         
 
         <Footer />
       </div>

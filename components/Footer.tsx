@@ -63,7 +63,7 @@ export default function Footer() {
                     <div className="flex items-start space-x-3 hover:text-orange-300 transition-colors">
                       <MapPin size={18} className="mt-1 flex-shrink-0 text-orange-400" />
                       <span className="leading-relaxed">
-                        123 Research Lane<br />
+                        Department of Electronics and Communication<br />
                         NIT Rourkela, Odisha 769008
                       </span>
                     </div>
