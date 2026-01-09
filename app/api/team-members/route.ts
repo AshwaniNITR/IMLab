@@ -91,3 +91,27 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+export async function GET(request: NextRequest) {
+  try {
+    await dbConnect();
+
+    const { searchParams } = new URL(request.url);
+    const designation = searchParams.get('designation');
+
+    const filter = designation ? { designation } : {};
+    
+    const teamMembers = await TeamMember.find(filter)
+      .sort({ enrolledDate: -1 });
+
+    return NextResponse.json({
+      success: true,
+      data: teamMembers,
+    });
+  } catch (error: any) {
+    console.error('Error fetching team members:', error);
+    return NextResponse.json(
+      { error: error.message || 'Failed to fetch team members' },
+      { status: 500 }
+    );
+  }
+}
