@@ -218,26 +218,7 @@ export default function TeamMemberCard({
             </motion.div>
 
             {/* Optional: Minimal divider with orange accent */}
-            <motion.div 
-              initial={{ opacity: 0, width: 0 }}
-              animate={{ opacity: 1, width: '100%' }}
-              transition={{ 
-                delay: 1.1 + (index * 0.1), 
-                duration: 0.5,
-                ease: "easeOut" as const
-              }}
-              className="mt-6 pt-4 border-t"
-              style={{
-                borderColor: isDarkMode ? '#333' : '#e5e7eb'
-              }}
-            >
-              <div className={`text-xs flex items-center gap-2 ${
-                isDarkMode ? 'text-gray-500' : 'text-gray-500'
-              }`}>
-                <div className="w-2 h-2 rounded-full bg-orange-500"></div>
-                <span>Integrated System Design Lab • NIT Rourkela</span>
-              </div>
-            </motion.div>
+          
           </div>
         </div>
       </motion.div>

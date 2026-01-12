@@ -32,6 +32,7 @@ export default function People() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [categorizedMembers, setCategorizedMembers] = useState<CategorizedMembers[]>([]);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
@@ -96,6 +97,11 @@ export default function People() {
 
     const nonEmptyCategories = categories.filter(category => category.members.length > 0);
     setCategorizedMembers(nonEmptyCategories);
+    
+    // Set first non-empty category as active
+    if (nonEmptyCategories.length > 0 && !activeCategory) {
+      setActiveCategory(nonEmptyCategories[0].category);
+    }
   };
 
   const filterMembers = (category: MemberCategory, status: MemberStatus): TeamMember[] => {
@@ -138,109 +144,172 @@ export default function People() {
   };
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
+    <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
       <Navbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
       
       <main className="container mx-auto px-4 py-12">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">Our People</h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Meet our talented team of researchers and faculty members.
+        {/* Hero Section */}
+        <div className="text-center mb-16">
+          <div className="relative inline-block mb-6">
+            <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent">
+              Our People
+            </h1>
+            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full"></div>
+          </div>
+          <p className="text-lg md:text-xl max-w-3xl mx-auto mb-8">
+            Meet our talented team of researchers, innovators, and visionaries at Integrated System Design Lab.
           </p>
+          
+          {/* Stats */}
+         
         </div>
 
         {/* Loading State */}
         {isLoading && (
-          <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          <div className="flex flex-col justify-center items-center py-20">
+            <div className="relative">
+              <div className="animate-spin rounded-full h-20 w-20 border-4 border-orange-200 border-t-orange-600 dark:border-orange-900 dark:border-t-orange-400"></div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-orange-600 dark:text-orange-400 font-semibold">Loading...</div>
+              </div>
+            </div>
+            <p className="mt-4 text-gray-600 dark:text-gray-400">Fetching team members...</p>
           </div>
         )}
 
         {/* Error State */}
         {error && (
-          <div className="text-center py-10">
-            <div className="bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-200 px-4 py-3 rounded max-w-md mx-auto">
-              <p>{error}</p>
+          <div className="max-w-2xl mx-auto">
+            <div className={`rounded-xl border p-8 text-center ${isDarkMode ? 'bg-red-900/30 border-red-800' : 'bg-red-50 border-red-200'}`}>
+              <div className="text-red-500 text-4xl mb-4">⚠️</div>
+              <h3 className="text-xl font-bold mb-2">Unable to Load Team Members</h3>
+              <p className="mb-6">{error}</p>
               <button 
                 onClick={fetchTeamMembers}
-                className="mt-4 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded"
+                className="px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
               >
-                Retry
+                Try Again
               </button>
             </div>
           </div>
         )}
 
         {/* Team Members - Categorized */}
-        {!isLoading && !error && (
+        {!isLoading && !error && teamMembers.length > 0 && (
           <div className="space-y-16">
-            {categorizedMembers.length === 0 && teamMembers.length > 0 ? (
-              <div className="text-center py-10">
-                <p className="text-gray-500 dark:text-gray-400">
-                  No team members found in predefined categories.
-                </p>
-                {/* Fallback: Show all members if no categories match */}
-                <div className="mt-8">
-                  <h2 className="text-2xl font-bold mb-6">All Team Members</h2>
-                  <div className="space-y-8">
-                    {teamMembers.sort(sortByEnrolledDate).map((member, index) => (
-                      <TeamMemberCard
-                        key={member._id}
-                        name={member.name}
-                        image={member.imageUrl}
-                        enrolledDate={formatDate(member.enrolledDate)}
-                        graduatedDate={member.graduatedDate ? formatDate(member.graduatedDate) : undefined}
-                        designation={member.designation}
-                        description={member.description}
-                        isDarkMode={isDarkMode}
-                        index={index}
-                      />
-                    ))}
-                  </div>
+            {/* Category Tabs */}
+            {categorizedMembers.length > 1 && (
+              <div className="overflow-x-auto">
+                <div className="flex space-x-2 md:space-x-4 pb-4 min-w-max">
+                  {categorizedMembers.map((category) => (
+                    <button
+                      key={category.category}
+                      onClick={() => setActiveCategory(category.category)}
+                      className={`px-6 py-3 rounded-lg font-semibold whitespace-nowrap transition-all duration-300 ${
+                        activeCategory === category.category
+                          ? `${isDarkMode ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg' : 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg'}`
+                          : `${isDarkMode ? 'bg-gray-800 text-gray-300 hover:bg-gray-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`
+                      }`}
+                    >
+                      {category.category}
+                      <span className={`ml-2 px-2 py-1 text-xs rounded-full ${
+                        activeCategory === category.category
+                          ? 'bg-white/20'
+                          : isDarkMode ? 'bg-gray-700' : 'bg-gray-300'
+                      }`}>
+                        {category.members.length}
+                      </span>
+                    </button>
+                  ))}
                 </div>
               </div>
-            ) : (
-              categorizedMembers.map((category) => (
-                <div key={category.category} className="mb-12">
-                  <h2 className="text-3xl font-bold mb-2 border-b pb-2 border-gray-200 dark:border-gray-700">
-                    {category.category}
-                  </h2>
-                  <p className="text-gray-600 dark:text-gray-400 mb-6">
-                    {category.members.length} {category.members.length === 1 ? 'member' : 'members'}
-                  </p>
-                  
-                  <div className="space-y-8">
-                    {category.members.sort(sortByEnrolledDate).map((member, index) => (
-                      <TeamMemberCard
-                        key={member._id}
-                        name={member.name}
-                        image={member.imageUrl}
-                        enrolledDate={formatDate(member.enrolledDate)}
-                        graduatedDate={member.graduatedDate ? formatDate(member.graduatedDate) : undefined}
-                        designation={member.designation}
-                        description={member.description}
-                        isDarkMode={isDarkMode}
-                        index={index}
-                      />
-                    ))}
-                  </div>
+            )}
+
+            {/* Active Category Content */}
+            {activeCategory && categorizedMembers.find(c => c.category === activeCategory) && (
+              <div className="space-y-8">
+                {categorizedMembers
+                  .filter(category => category.category === activeCategory)
+                  .map((category) => (
+                    <div key={category.category}>
+                      <div className="flex items-center justify-between mb-8">
+                        <div>
+                          <h2 className="text-3xl font-bold mb-2">{category.category}</h2>
+                          <div className={`h-1 w-16 rounded-full bg-gradient-to-r from-orange-500 to-orange-600`}></div>
+                        </div>
+                        <div className={`px-4 py-2 rounded-full ${isDarkMode ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-700'}`}>
+                          <span className="font-semibold">{category.members.length}</span> members
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-8">
+                        {category.members.sort(sortByEnrolledDate).map((member, index) => (
+                          <TeamMemberCard
+                            key={member._id}
+                            name={member.name}
+                            image={member.imageUrl}
+                            enrolledDate={formatDate(member.enrolledDate)}
+                            graduatedDate={member.graduatedDate ? formatDate(member.graduatedDate) : undefined}
+                            designation={member.designation}
+                            description={member.description}
+                            isDarkMode={isDarkMode}
+                            index={index}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            )}
+
+            {/* All Members View (fallback) */}
+            {!activeCategory && categorizedMembers.length === 0 && teamMembers.length > 0 && (
+              <div>
+                <div className="text-center mb-12">
+                  <h2 className="text-3xl font-bold mb-2">All Team Members</h2>
+                  <div className={`h-1 w-16 mx-auto rounded-full bg-gradient-to-r from-orange-500 to-orange-600`}></div>
                 </div>
-              ))
+                <div className="space-y-8">
+                  {teamMembers.sort(sortByEnrolledDate).map((member, index) => (
+                    <TeamMemberCard
+                      key={member._id}
+                      name={member.name}
+                      image={member.imageUrl}
+                      enrolledDate={formatDate(member.enrolledDate)}
+                      graduatedDate={member.graduatedDate ? formatDate(member.graduatedDate) : undefined}
+                      designation={member.designation}
+                      description={member.description}
+                      isDarkMode={isDarkMode}
+                      index={index}
+                    />
+                  ))}
+                </div>
+              </div>
             )}
           </div>
         )}
 
-        {/* Show empty state if no members at all */}
+        {/* Empty State */}
         {!isLoading && !error && teamMembers.length === 0 && (
           <div className="text-center py-20">
-            <p className="text-gray-500 dark:text-gray-400 text-lg">
-              No team members found.
-            </p>
+            <div className="max-w-md mx-auto">
+              <div className="text-6xl mb-6">👥</div>
+              <h3 className="text-2xl font-bold mb-4">No Team Members Yet</h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-8">
+                Team members will appear here once they're added to the database.
+              </p>
+              <button 
+                onClick={fetchTeamMembers}
+                className="px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold rounded-lg transition-all duration-300"
+              >
+                Refresh
+              </button>
+            </div>
           </div>
         )}
       </main>
       
-      <Footer  />
+      <Footer />
     </div>
   );
 }
