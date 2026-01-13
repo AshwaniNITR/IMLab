@@ -19,6 +19,7 @@ export default function Navbar({ isDarkMode, toggleTheme }: NavbarProps) {
     { href: '/', label: 'Home' },
     { href: '/people', label: 'People' },
     { href: '/research', label: 'Research' },
+    {href:'/projects', label: 'Projects' },
     { href: '/publication', label: 'Publication' },
     { href: '/contact', label: 'Contact' }
   ];
