@@ -6,6 +6,7 @@ import { Plus, Trash2 } from 'lucide-react';
 
 type ProjectFormData = {
   title: string;
+  author: string;
   type: string;
   year: string;
 };
@@ -19,6 +20,7 @@ export default function AddProjectPage() {
   // Array of forms
   const [forms, setForms] = useState<ProjectFormData[]>([{
     title: '',
+    author:'',
     type: '',
     year: '',
   }]);
@@ -28,6 +30,7 @@ export default function AddProjectPage() {
       ...forms,
       {
         title: '',
+        author:'',
         type: '',
         year: '',
       },
@@ -94,7 +97,7 @@ export default function AddProjectPage() {
         setIsLoading(false);
         return;
       }
-
+      console.log('Submitting forms:', forms);
       // Submit to API
       const response = await fetch('/api/projects', {
         method: 'POST',
@@ -115,13 +118,14 @@ export default function AddProjectPage() {
       // Reset form
       setForms([{
         title: '',
+        author:'',
         type: '',
         year: '',
       }]);
 
       // Redirect after 2 seconds
       setTimeout(() => {
-        router.push('/projects'); // Change this to your projects page route
+        router.push('/'); // Change this to your projects page route
       }, 2000);
 
     } catch (err: any) {
@@ -202,6 +206,19 @@ export default function AddProjectPage() {
                     onChange={(e) => updateFormData(index, 'title', e.target.value)}
                     className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Enter project title"
+                    required
+                  />
+                </div>
+                  <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Author *
+                  </label>
+                  <input
+                    type="text"
+                    value={form.author}
+                    onChange={(e) => updateFormData(index, 'author', e.target.value)}
+                    className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Enter Authors, separated by commas"
                     required
                   />
                 </div>

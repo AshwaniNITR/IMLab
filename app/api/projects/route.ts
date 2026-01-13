@@ -10,6 +10,7 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
     const { projects } = body;
+    console.log('Received projects:', projects);
 
     // Validate request body
     if (!projects || !Array.isArray(projects) || projects.length === 0) {
@@ -39,6 +40,7 @@ export async function POST(request: NextRequest) {
           { status: 400 }
         );
       }
+      project.author = project.author || 'Unknown Author';
       
       if (!project.year || isNaN(Number(project.year))) {
         return NextResponse.json(
@@ -63,6 +65,7 @@ export async function POST(request: NextRequest) {
 
     // Create projects
     const createdProjects = await Project.insertMany(projects);
+    console.log('Created projects:', createdProjects);
 
     return NextResponse.json({
       message: `${createdProjects.length} project(s) created successfully`,
