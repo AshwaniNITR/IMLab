@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Navbar from '@/components/Navbar';
+import Navbar from '@/app/admin/components/Navbar';
 import Footer from '@/components/Footer';
 import TeamMemberCard from '@/components/TeamCard';
 import { PencilIcon } from '@heroicons/react/24/outline';
