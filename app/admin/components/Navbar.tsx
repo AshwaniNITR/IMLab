@@ -112,8 +112,8 @@ export default function Navbar({ isDarkMode, toggleTheme }: NavbarProps) {
   const navLinks = [
     { href: '/admin/people', label: 'People' },
     { href: '/research', label: 'Research' },
-    { href: '/projects', label: 'Projects' },
-    { href: '/publication', label: 'Publication' },
+    { href: '/admin/projects', label: 'Projects' },
+    { href: '/admin/publication', label: 'Publication' },
     { href: '/contact', label: 'Contact' }
   ];
 
