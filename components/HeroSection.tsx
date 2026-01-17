@@ -13,6 +13,7 @@ const carouselImages = [
   // Add more image paths here
   '/labview.jpeg', // Example
   '/firstLabPh.jpeg', // Example
+  '/secondLabPh.jpeg'
 ];
 
 export default function HeroSection({ isDarkMode }: HeroSectionProps) {
