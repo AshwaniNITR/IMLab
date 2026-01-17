@@ -3,6 +3,7 @@
 import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Trash2 } from 'lucide-react';
+import Navbar from '../components/Navbar';
 
 type ProjectFormData = {
   title: string;
@@ -16,6 +17,10 @@ export default function AddProjectPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+    const [isDarkMode, setIsDarkMode] = useState(false);
+   const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
+  };
   
   // Array of forms
   const [forms, setForms] = useState<ProjectFormData[]>([{
@@ -142,7 +147,12 @@ export default function AddProjectPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div 
+     className={`min-h-screen transition-colors duration-300 ${
+        isDarkMode ? "bg-gray-900" : "bg-white"
+      }`}>
+              <Navbar isDarkMode={isDarkMode} toggleTheme={toggleTheme}/>
+        
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-lg shadow-md p-8">
           <div className="flex justify-between items-center mb-8">

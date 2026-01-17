@@ -21,10 +21,12 @@ export default function Home() {
         isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'
       }`}
     >
-      <div className="fixed top-0 left-0 w-full z-50">
+     
         <Navbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
+      <div>
+ Welcome to Admin Portal
       </div>
-      Welcome to Admin Portal
+     
       
     </main>
   );

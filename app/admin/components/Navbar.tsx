@@ -110,11 +110,14 @@ export default function Navbar({ isDarkMode, toggleTheme }: NavbarProps) {
   };
 
   const navLinks = [
+    {href:'/admin/dashboard', label:'Dashboard' },
     { href: '/admin/people', label: 'People' },
-    { href: '/research', label: 'Research' },
+    //{ href: '/research', label: 'Research' },
     { href: '/admin/projects', label: 'Projects' },
     { href: '/admin/publication', label: 'Publication' },
-    { href: '/contact', label: 'Contact' }
+    {href:'/admin/uploadProjects',label:'Upload Projects' },
+    {href:'/admin/uploadPublications',label:'Upload Publication' },
+    {href:'/admin/uploadTeam',label:'Upload Team' },
   ];
 
   return (
