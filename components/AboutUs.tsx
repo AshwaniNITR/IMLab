@@ -36,37 +36,65 @@ export default function AboutUs({ isDarkMode }: AboutUsProps) {
         </div>
 
         {/* Content */}
-        <div className={`space-y-6 text-lg leading-relaxed ${
-          isDarkMode ? 'text-gray-300' : 'text-gray-700'
-        }`}>
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
-            The <span className={`font-semibold ${isDarkMode ? 'text-orange-400' : 'text-orange-600'}`}>
-              Integrated System Design Lab
-            </span> focuses on cutting-edge research in hardware design, artificial intelligence acceleration, and advanced computing systems.
-          </motion.p>
-          
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            Our team works on developing innovative solutions for next-generation computing architectures, with particular emphasis on <span className={`font-semibold ${isDarkMode ? 'text-orange-400' : 'text-orange-600'}`}>
-              energy-efficient AI hardware
-            </span>, approximate computing, and semiconductor design.
-          </motion.p>
-          
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            We collaborate with leading industry partners and academic institutions to push the boundaries of what's possible in integrated systems and microelectronics.
-          </motion.p>
-        </div>
+      <div
+  className={`space-y-6 text-lg leading-relaxed ${
+    isDarkMode ? 'text-gray-300' : 'text-gray-700'
+  }`}
+>
+  <motion.p
+    initial={{ opacity: 0, y: 10 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.1 }}
+  >
+    The{' '}
+    <span
+      className={`font-semibold ${
+        isDarkMode ? 'text-orange-400' : 'text-orange-600'
+      }`}
+    >
+      Integrated System Design Lab
+    </span>{' '}
+    at NIT Rourkela focuses on research and development in{' '}
+    <span
+      className={`font-semibold ${
+        isDarkMode ? 'text-orange-400' : 'text-orange-600'
+      }`}
+    >
+      integrated circuit design
+    </span>{' '}
+    for conventional electronic systems as well as Micro-Sensors (MEMS).
+  </motion.p>
+
+  <motion.p
+    initial={{ opacity: 0, y: 10 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.2 }}
+  >
+    The laboratory assumes a leadership role in the development of{' '}
+    <span
+      className={`font-semibold ${
+        isDarkMode ? 'text-orange-400' : 'text-orange-600'
+      }`}
+    >
+      sensor interfacing and analog IC design
+    </span>
+    , with particular emphasis on MEMS capacitive accelerometers, embedded
+    instrumentation, and low-power circuit techniques.
+  </motion.p>
+
+  <motion.p
+    initial={{ opacity: 0, y: 10 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.3 }}
+  >
+    Research areas include analog and mixed-signal IC design, embedded systems,
+    instrumentation, MEMS capacitive sensors, biomedical and neuromorphic
+    circuits, and complete system integration from design to testing. Students
+    in the lab gain hands-on expertise across the full IC development cycle and
+    sensor-integrated system validation.
+  </motion.p>
+</div>
+
 
         {/* Accent line */}
       
