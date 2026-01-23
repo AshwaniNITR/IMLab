@@ -118,7 +118,7 @@ export default function CreateVacancyPage() {
         tags: formData.tags.filter(tag => tag.trim() !== '')
       };
       
-      const response = await fetch('/api/vacancies', {
+      const response = await fetch('/api/getVac', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

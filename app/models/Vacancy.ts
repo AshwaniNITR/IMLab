@@ -109,18 +109,6 @@ const VacancySchema = new Schema<IVacancy>({
   versionKey: false
 });
 
-// Indexes for better query performance
-VacancySchema.index({ createdAt: -1 });
-VacancySchema.index({ tags: 1, isActive: 1 });
-VacancySchema.index({ 'positions.type': 1, isActive: 1 });
-
-// Create text index for search
-VacancySchema.index({
-  content: 'text',
-  'positions.title': 'text',
-  'positions.description': 'text',
-  department: 'text'
-});
 
 // Middleware to update expiry status
 

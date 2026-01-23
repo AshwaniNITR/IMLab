@@ -99,134 +99,92 @@ export async function POST(request: NextRequest) {
   try {
     await dbConnect();
     
-    const body: VacancyQuery = await request.json();
+    const body = await request.json();
     
-    const {
-      search,
-      tags,
-      type,
-      department,
-      activeOnly = true,
-      page = 1,
-      limit = 10,
-      sortBy = 'createdAt',
-      sortOrder = 'desc'
-    } = body;
-    
-    // Build query
-    const query: any = {};
-    
-    // Active vacancies filter
-    if (activeOnly) {
-      query.isActive = true;
-      query.$or = [
-        { expiryDate: { $exists: false } },
-        { expiryDate: { $gt: new Date() } }
-      ];
+    // Validate required fields
+    if (!body.content || !body.contactEmail || !body.department) {
+      return NextResponse.json({
+        success: false,
+        message: 'Missing required fields: content, contactEmail, and department are required'
+      }, { status: 400 });
     }
-    
-    // Text search
-    if (search) {
-      query.$text = { $search: search };
+
+    // Validate positions
+    if (!body.positions || body.positions.length === 0) {
+      return NextResponse.json({
+        success: false,
+        message: 'At least one position is required'
+      }, { status: 400 });
     }
-    
-    // Tag filter
-    if (tags && tags.length > 0) {
-      query.tags = { $all: tags.map(tag => tag.toLowerCase()) };
-    }
-    
-    // Department filter
-    if (department) {
-      query.department = department;
-    }
-    
-    // Position type filter
-    if (type) {
-      query['positions.type'] = type;
-    }
-    
-    // Calculate skip for pagination
-    const skip = (page - 1) * limit;
-    
-    // Determine sort order
-    const sort: any = {};
-    sort[sortBy] = sortOrder === 'asc' ? 1 : -1;
-    
-    // Execute query with pagination
-    const [vacancies, total] = await Promise.all([
-      Vacancy.find(query)
-        .sort(sort)
-        .skip(skip)
-        .limit(limit)
-        .select('-__v')
-        .lean(),
-      Vacancy.countDocuments(query)
-    ]);
-    
-    // Format response
-    const formattedVacancies = vacancies.map(vacancy => ({
-      ...vacancy,
-      _id: vacancy._id.toString(),
-      createdAt: vacancy.createdAt.toISOString(),
-      updatedAt: vacancy.updatedAt.toISOString(),
-      expiryDate: vacancy.expiryDate?.toISOString(),
-      positions: vacancy.positions?.map(pos => ({
-        ...pos,
-        applicationDeadline: pos.applicationDeadline?.toISOString(),
-        salaryRange: pos.salaryRange || undefined
-      }))
-    }));
-    
-    // Calculate total openings across all returned vacancies
-    const totalOpenings = vacancies.reduce((sum, vacancy) => {
-      return sum + (vacancy.positions?.reduce((posSum, pos) => 
-        posSum + (pos.numberOfOpenings || 1), 0) || 0);
-    }, 0);
-    
+
+    // Create new vacancy
+    const vacancy = new Vacancy({
+      content: body.content,
+      isActive: body.isActive ?? true,
+      expiryDate: body.expiryDate ? new Date(body.expiryDate) : undefined,
+      tags: body.tags || [],
+      department: body.department,
+      positions: body.positions.map((pos: any) => ({
+        title: pos.title,
+        description: pos.description,
+        requirements: pos.requirements.filter((req: string) => req.trim() !== ''),
+        type: pos.type,
+        location: pos.location,
+        salaryRange: pos.salaryRange?.min && pos.salaryRange?.max ? {
+          min: parseFloat(pos.salaryRange.min),
+          max: parseFloat(pos.salaryRange.max),
+          currency: pos.salaryRange.currency || 'USD'
+        } : undefined,
+        applicationDeadline: new Date(pos.applicationDeadline),
+        numberOfOpenings: parseInt(pos.numberOfOpenings) || 1
+      })),
+      contactEmail: body.contactEmail,
+      applicationInstructions: body.applicationInstructions || 'Please submit your CV and cover letter to the email address provided.'
+    });
+
+    // Save to database
+    const savedVacancy = await vacancy.save();
+
     return NextResponse.json({
       success: true,
-      message: vacancies.length > 0 
-        ? 'Vacancies retrieved successfully' 
-        : 'No vacancies found matching your criteria',
-      data: formattedVacancies,
-      meta: {
-        total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit),
-        hasNextPage: page < Math.ceil(total / limit),
-        hasPreviousPage: page > 1,
-        totalOpenings,
-        filtersApplied: {
-          search,
-          tags,
-          type,
-          department,
-          activeOnly
-        }
+      message: 'Vacancy created successfully',
+      data: {
+        id: savedVacancy._id.toString(),
+        content: savedVacancy.content,
+        isActive: savedVacancy.isActive,
+        department: savedVacancy.department,
+        createdAt: savedVacancy.createdAt.toISOString()
       }
-    });
-    
+    }, { status: 201 });
+
   } catch (error) {
-    console.error('POST Error:', error);
+    console.error('CREATE Vacancy Error:', error);
     
     // Handle validation errors
     if (error instanceof Error && error.name === 'ValidationError') {
       return NextResponse.json({
         success: false,
-        message: 'Invalid query parameters',
+        message: 'Validation error',
         error: error.message
       }, { status: 400 });
     }
-    
+
+    // Handle duplicate key errors
+    if (error instanceof Error && 'code' in error && error.code === 11000) {
+      return NextResponse.json({
+        success: false,
+        message: 'Duplicate entry',
+        error: error.message
+      }, { status: 409 });
+    }
+
     return NextResponse.json({
       success: false,
-      message: 'Failed to search vacancies',
+      message: 'Failed to create vacancy',
       error: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 });
   }
 }
-
 // Optional: PUT method to update vacancy (admin only)
 export async function PUT(request: NextRequest) {
   try {
