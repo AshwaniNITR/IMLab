@@ -32,7 +32,6 @@ export default function People() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [categorizedMembers, setCategorizedMembers] = useState<CategorizedMembers[]>([]);
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
@@ -68,26 +67,27 @@ export default function People() {
   };
 
   const categorizeMembers = () => {
+    // Create all categories in the specified order
     const categories: CategorizedMembers[] = [
       {
         category: 'Present Ph.D',
         members: filterMembers('phd', 'present')
       },
       {
-        category: 'Past Ph.D',
-        members: filterMembers('phd', 'past')
-      },
-      {
         category: 'Present M.Tech',
         members: filterMembers('mtech', 'present')
       },
       {
-        category: 'Past M.Tech',
-        members: filterMembers('mtech', 'past')
-      },
-      {
         category: 'Present B.Tech',
         members: filterMembers('btech', 'present')
+      },
+      {
+        category: 'Past Ph.D',
+        members: filterMembers('phd', 'past')
+      },
+      {
+        category: 'Past M.Tech',
+        members: filterMembers('mtech', 'past')
       },
       {
         category: 'Past B.Tech',
@@ -95,13 +95,9 @@ export default function People() {
       }
     ];
 
+    // Remove empty categories
     const nonEmptyCategories = categories.filter(category => category.members.length > 0);
     setCategorizedMembers(nonEmptyCategories);
-    
-    // Set first non-empty category as active
-    if (nonEmptyCategories.length > 0 && !activeCategory) {
-      setActiveCategory(nonEmptyCategories[0].category);
-    }
   };
 
   const filterMembers = (category: MemberCategory, status: MemberStatus): TeamMember[] => {
@@ -159,9 +155,6 @@ export default function People() {
           <p className="text-lg md:text-xl max-w-3xl mx-auto mb-8">
             Meet our talented team of researchers, innovators, and visionaries at Integrated System Design Lab.
           </p>
-          
-          {/* Stats */}
-         
         </div>
 
         {/* Loading State */}
@@ -194,83 +187,25 @@ export default function People() {
           </div>
         )}
 
-        {/* Team Members - Categorized */}
-        {!isLoading && !error && teamMembers.length > 0 && (
+        {/* Team Members - Display All Categories in Specified Order */}
+        {!isLoading && !error && teamMembers.length > 0 && categorizedMembers.length > 0 && (
           <div className="space-y-16">
-            {/* Category Tabs */}
-            {categorizedMembers.length > 1 && (
-              <div className="overflow-x-auto">
-                <div className="flex space-x-2 md:space-x-4 pb-4 min-w-max">
-                  {categorizedMembers.map((category) => (
-                    <button
-                      key={category.category}
-                      onClick={() => setActiveCategory(category.category)}
-                      className={`px-6 py-3 rounded-lg font-semibold whitespace-nowrap transition-all duration-300 ${
-                        activeCategory === category.category
-                          ? `${isDarkMode ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg' : 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg'}`
-                          : `${isDarkMode ? 'bg-gray-800 text-gray-300 hover:bg-gray-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`
-                      }`}
-                    >
-                      {category.category}
-                      <span className={`ml-2 px-2 py-1 text-xs rounded-full ${
-                        activeCategory === category.category
-                          ? 'bg-white/20'
-                          : isDarkMode ? 'bg-gray-700' : 'bg-gray-300'
-                      }`}>
-                        {category.members.length}
-                      </span>
-                    </button>
-                  ))}
+            {categorizedMembers.map((category) => (
+              <div key={category.category} className="space-y-8">
+                {/* Category Header */}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-2xl font-bold mb-2">{category.category}</h3>
+                    <div className={`h-1 w-16 rounded-full bg-gradient-to-r from-orange-500 to-orange-600`}></div>
+                  </div>
+                  <div className={`px-4 py-2 rounded-full ${isDarkMode ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-700'}`}>
+                    <span className="font-semibold">{category.members.length}</span> members
+                  </div>
                 </div>
-              </div>
-            )}
-
-            {/* Active Category Content */}
-            {activeCategory && categorizedMembers.find(c => c.category === activeCategory) && (
-              <div className="space-y-8">
-                {categorizedMembers
-                  .filter(category => category.category === activeCategory)
-                  .map((category) => (
-                    <div key={category.category}>
-                      <div className="flex items-center justify-between mb-8">
-                        <div>
-                          <h2 className="text-3xl font-bold mb-2">{category.category}</h2>
-                          <div className={`h-1 w-16 rounded-full bg-gradient-to-r from-orange-500 to-orange-600`}></div>
-                        </div>
-                        <div className={`px-4 py-2 rounded-full ${isDarkMode ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-700'}`}>
-                          <span className="font-semibold">{category.members.length}</span> members
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-8">
-                        {category.members.sort(sortByEnrolledDate).map((member, index) => (
-                          <TeamMemberCard
-                            key={member._id}
-                            name={member.name}
-                            image={member.imageUrl}
-                            enrolledDate={formatDate(member.enrolledDate)}
-                            graduatedDate={member.graduatedDate ? formatDate(member.graduatedDate) : undefined}
-                            designation={member.designation}
-                            description={member.description}
-                            isDarkMode={isDarkMode}
-                            index={index}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-              </div>
-            )}
-
-            {/* All Members View (fallback) */}
-            {!activeCategory && categorizedMembers.length === 0 && teamMembers.length > 0 && (
-              <div>
-                <div className="text-center mb-12">
-                  <h2 className="text-3xl font-bold mb-2">All Team Members</h2>
-                  <div className={`h-1 w-16 mx-auto rounded-full bg-gradient-to-r from-orange-500 to-orange-600`}></div>
-                </div>
+                
+                {/* Members List */}
                 <div className="space-y-8">
-                  {teamMembers.sort(sortByEnrolledDate).map((member, index) => (
+                  {category.members.sort(sortByEnrolledDate).map((member, index) => (
                     <TeamMemberCard
                       key={member._id}
                       name={member.name}
@@ -285,7 +220,7 @@ export default function People() {
                   ))}
                 </div>
               </div>
-            )}
+            ))}
           </div>
         )}
 
