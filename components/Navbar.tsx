@@ -184,7 +184,7 @@ export default function Navbar({ isDarkMode, toggleTheme }: NavbarProps) {
           <div className="flex items-center relative w-full">
             <div className="absolute -inset-3 bg-black/50 backdrop-blur-sm rounded-lg -z-10" />
             
-            <div className="px-3 py-2">
+            <div className="">
               <h1
                 className={`text-sm sm:text-xl md:text-lg font-bold sm:font-extrabold tracking-tight whitespace-nowrap  text-ellipsis drop-shadow-lg ${
                   isDarkMode ? 'text-orange-400' : 'text-orange-300'
