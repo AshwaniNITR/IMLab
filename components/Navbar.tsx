@@ -126,71 +126,94 @@ export default function Navbar({ isDarkMode, toggleTheme }: NavbarProps) {
           isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-800 text-white'
         }`}
       >
-        {/* Header Section */}
-        <header
-          className={`border-b transition-colors duration-300 ${
-            isDarkMode
-              ? 'bg-gray-800 border-gray-700'
-              : 'bg-white border-neutral-200'
-          }`}
-        >
-          <div className="container mx-auto px-4 py-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <button
-                  onClick={handleLogoClick}
-                  className={`w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center rounded flex-shrink-0 transition-all duration-300 cursor-pointer hover:opacity-90 active:scale-95 ${
-                    isDarkMode
-                      ? 'bg-orange-600 shadow-lg shadow-orange-500/50'
-                      : 'bg-neutral-800'
-                  }`}
-                  aria-label="Admin Access"
-                  title="Admin Access"
-                >
-                  <GraduationCap
-                    className={`w-8 h-8 sm:w-10 sm:h-10 transition-colors duration-300 ${
-                      isDarkMode ? 'text-white' : 'text-amber-600'
-                    }`}
-                  />
-                </button>
-
-                <div
-                  className={`border-l-2 pl-3 sm:pl-4 transition-colors duration-300 ${
-                    isDarkMode ? 'border-gray-600' : 'border-neutral-300'
-                  }`}
-                >
-                  <h1
-                    className={`text-lg sm:text-xl md:text-2xl font-bold tracking-tight transition-colors duration-300 ${
-                      isDarkMode ? 'text-orange-400' : 'text-orange-600'
-                    }`}
-                  >
-                    Integrated System Design Lab
-                  </h1>
-                  <h3
-                    className={`text-sm sm:text-base font-semibold tracking-tight transition-colors duration-300 ${
-                      isDarkMode ? 'text-orange-300' : 'text-orange-600'
-                    }`}
-                  >
-                    NIT Rourkela
-                  </h3>
-                </div>
-              </div>
-
-              {/* Mobile Menu Button */}
-              <button
-                onClick={toggleMobileMenu}
-                className={`lg:hidden p-2 rounded-lg transition-colors duration-300 ${
-                  isDarkMode
-                    ? 'hover:bg-gray-700 text-gray-300'
-                    : 'hover:bg-gray-100 text-gray-800'
+<header
+  className={`relative border-b transition-colors duration-300 ${
+    isDarkMode
+      ? 'bg-gray-800 border-gray-700'
+      : 'bg-white border-neutral-200'
+  }`}
+>
+  {/* Background Image with overlay */}
+  <div 
+    className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
+    style={{
+      backgroundImage: "url('/bgImage.jpeg')",
+    }}
+  />
+  <div className="absolute inset-0 z-0 bg-gradient-to-b from-black/70 via-black/60 to-black/50" />
+  
+  {/* Content Container */}
+  <div className="container relative z-10 mx-auto px-4 py-4 md:py-6">
+    <div className="flex items-center justify-between">
+      {/* Logo and text in equal height containers */}
+      <div className="flex items-stretch max-w-[calc(100%-60px)]">
+        {/* Logo container */}
+        <div className="flex items-center">
+          <div className="relative">
+            <div className="absolute -inset-2 bg-black/40 backdrop-blur-sm rounded-lg -z-10" />
+            <button
+              onClick={handleLogoClick}
+              className={`w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center rounded transition-all duration-300 cursor-pointer hover:opacity-90 active:scale-95 ${
+                isDarkMode
+                  ? 'bg-orange-600 shadow-lg shadow-orange-500/50'
+                  : ''
+              }`}
+            >
+              <GraduationCap
+                className={`w-7 h-7 sm:w-8 sm:h-8 ${
+                  isDarkMode ? 'text-white' : 'text-amber-600'
                 }`}
-                aria-label="Toggle mobile menu"
+              />
+            </button>
+          </div>
+        </div>
+
+        {/* Vertical Divider Line - centered vertically */}
+        <div className="flex items-center mx-3 sm:mx-4">
+          <div 
+            className={`h-full w-0.5 transition-colors duration-300 ${
+              isDarkMode 
+                ? 'bg-gray-500' 
+                : 'bg-gray-300'
+            }`}
+          />
+        </div>
+
+        {/* Text container - matching height */}
+        <div className="flex items-center flex-1 min-w-0">
+          <div className="flex items-center relative w-full">
+            <div className="absolute -inset-3 bg-black/50 backdrop-blur-sm rounded-lg -z-10" />
+            
+            <div className="px-3 py-2">
+              <h1
+                className={`text-sm sm:text-xl md:text-lg font-bold sm:font-extrabold tracking-tight whitespace-nowrap  text-ellipsis drop-shadow-lg ${
+                  isDarkMode ? 'text-orange-400' : 'text-orange-300'
+                }`}
               >
-                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
+                Integrated System Design Lab
+              </h1>
+              <h3
+                className={`text-xs sm:text-sm font-semibold tracking-tight whitespace-nowrap drop-shadow-md ${
+                  isDarkMode ? 'text-orange-300' : 'text-orange-200'
+                }`}
+              >
+                NIT Rourkela
+              </h3>
             </div>
           </div>
-        </header>
+        </div>
+      </div>
+
+      {/* Mobile Menu Button */}
+      <button
+        onClick={toggleMobileMenu}
+        className={`block sm:hidden p-2 rounded-lg transition-colors duration-300 backdrop-blur-sm text-gray-300`}
+      >
+        {isMobileMenuOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6" /> : <Menu className="w-5 h-5 sm:w-6 sm:h-6" />}
+      </button>
+    </div>
+  </div>
+</header>
 
         {/* Navigation Section */}
         <div className="container mx-auto px-4">
