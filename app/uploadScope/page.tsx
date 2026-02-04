@@ -147,7 +147,7 @@ export default function AddProjectPage() {
 
       // Redirect after 2 seconds
       setTimeout(() => {
-        router.push('/rscope');
+        router.push('/');
       }, 2000);
 
     } catch (err: any) {
