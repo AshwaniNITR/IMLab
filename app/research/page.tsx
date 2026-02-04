@@ -3,6 +3,8 @@
 import Navbar from '@/components/Navbar';
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
+import Footer from '@/components/Footer';
+
 
 interface ResearchItem {
   _id: string;
@@ -41,7 +43,7 @@ export default function Research() {
     const fetchResearchData = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('https://im-lab.vercel.app/api/rscope');
+        const response = await fetch('/api/rscope');
         
         if (!response.ok) {
           throw new Error('Failed to fetch research data');
@@ -280,9 +282,8 @@ export default function Research() {
             </button>
           </div>
         )}
-
-      
       </div>
+      <Footer/>
     </main>
   );
 }

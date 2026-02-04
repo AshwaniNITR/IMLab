@@ -29,7 +29,7 @@ export default function ResearchScope({ isDarkMode }: ResearchScopeProps) {
     const fetchScopeData = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('https://im-lab.vercel.app/api/rscope');
+        const response = await fetch('/api/rscope');
         
         if (!response.ok) {
           throw new Error('Failed to fetch research scope data');
