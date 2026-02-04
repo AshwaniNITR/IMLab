@@ -124,6 +124,11 @@ export default function Research() {
             Research Scope
           </h1>
           <div className="w-24 h-1 bg-gradient-to-r from-orange-500 to-orange-600 mx-auto mb-6 rounded-full"></div>
+           <p className={`text-lg max-w-3xl mx-auto ${
+            isDarkMode ? 'text-gray-300' : 'text-gray-600'
+          }`}>
+           Explore our cutting-edge research in IC Design, Sensor Interfacing Circuits and Integrated System Design.
+          </p>
         
         </motion.div>
 
@@ -207,7 +212,7 @@ export default function Research() {
                           </div>
                           
                           {/* Brief Section below image */}
-                          <div className="mt-6">
+                          {/* <div className="mt-6">
                             <h3 className={`text-lg font-semibold mb-3 ${
                               isDarkMode ? 'text-orange-400' : 'text-orange-600'
                             }`}>
@@ -218,19 +223,13 @@ export default function Research() {
                             }`}>
                               {item.brief}
                             </p>
-                          </div>
+                          </div> */}
                         </div>
 
                         {/* Content Section */}
                         <div className="lg:w-1/2 w-full">
                           <div className="mb-4">
-                            <span className={`text-xs font-medium px-3 py-1 rounded-full ${
-                              isDarkMode 
-                                ? 'bg-orange-500/20 text-orange-400' 
-                                : 'bg-orange-100 text-orange-700'
-                            }`}>
-                              Research Project
-                            </span>
+                         
                    
                           </div>
 
