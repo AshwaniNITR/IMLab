@@ -3,6 +3,7 @@
 
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface ResearchScopeProps {
   isDarkMode: boolean;
@@ -13,12 +14,12 @@ interface ScopeItem {
   title: string;
   brief?: string;
   imageUrlOne?: string;
-  description?:string;
+  description?: string;
   img?: string;
-  // Add other fields from your schema if needed
 }
 
 export default function ResearchScope({ isDarkMode }: ResearchScopeProps) {
+  const router = useRouter();
   const [scopeData, setScopeData] = useState<ScopeItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -28,7 +29,7 @@ export default function ResearchScope({ isDarkMode }: ResearchScopeProps) {
     const fetchScopeData = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('/api/rscope');
+        const response = await fetch('https://im-lab.vercel.app/api/rscope');
         
         if (!response.ok) {
           throw new Error('Failed to fetch research scope data');
@@ -42,6 +43,7 @@ export default function ResearchScope({ isDarkMode }: ResearchScopeProps) {
           title: project.title,
           description: project.brief, // Using brief as description
           img: project.imageUrlOne,
+          brief: project.brief, // Store brief for later use
         }));
         
         setScopeData(formattedData);
@@ -58,6 +60,15 @@ export default function ResearchScope({ isDarkMode }: ResearchScopeProps) {
 
     fetchScopeData();
   }, []);
+
+  // Handle Learn More click - navigate to research page and scroll to item
+  const handleLearnMore = (itemId: string) => {
+    // Store the item ID in sessionStorage for the research page to use
+    sessionStorage.setItem('scrollToItemId', itemId);
+    
+    // Navigate to research page
+    router.push('/research');
+  };
 
   // Fallback data in case API fails
   const fallbackData: ScopeItem[] = [
@@ -183,11 +194,14 @@ export default function ResearchScope({ isDarkMode }: ResearchScopeProps) {
                     {item.description}
                   </p>
 
-                  <button className={`px-4 py-2 rounded-lg transition-all duration-300 w-full ${
-                    isDarkMode 
-                      ? 'bg-orange-500 hover:bg-orange-600 text-white' 
-                      : 'bg-orange-500 hover:bg-orange-600 text-white'
-                  }`}>
+                  <button 
+                    onClick={() => handleLearnMore(item._id)}
+                    className={`px-4 py-2 rounded-lg transition-all duration-300 w-full ${
+                      isDarkMode 
+                        ? 'bg-orange-500 hover:bg-orange-600 text-white' 
+                        : 'bg-orange-500 hover:bg-orange-600 text-white'
+                    }`}
+                  >
                     Learn More
                   </button>
                 </div>
@@ -201,7 +215,7 @@ export default function ResearchScope({ isDarkMode }: ResearchScopeProps) {
           <div className="text-center py-12">
             <p className="text-gray-300 text-lg mb-4">No research scope data available</p>
             <button 
-              onClick={() => window.location.href = '/add-rscope'}
+              onClick={() => router.push('/add-rscope')}
               className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
             >
               Add Research Scope
@@ -220,11 +234,14 @@ export default function ResearchScope({ isDarkMode }: ResearchScopeProps) {
             }`}
           >
             <div className="text-center">
-              <button className={`px-8 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                isDarkMode 
-                  ? 'bg-gradient-to-r from-gray-800/60 to-gray-900/60 border border-gray-700/50 text-orange-400 hover:bg-gray-800/80 hover:border-orange-500/30' 
-                  : 'bg-gradient-to-r from-gray-700/80 to-gray-800/80 border border-gray-600/50 text-orange-400 hover:bg-gray-700/90 hover:border-orange-500/30'
-              }`}>
+              <button 
+                onClick={() => router.push('/research')}
+                className={`px-8 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                  isDarkMode 
+                    ? 'bg-gradient-to-r from-gray-800/60 to-gray-900/60 border border-gray-700/50 text-orange-400 hover:bg-gray-800/80 hover:border-orange-500/30' 
+                    : 'bg-gradient-to-r from-gray-700/80 to-gray-800/80 border border-gray-600/50 text-orange-400 hover:bg-gray-700/90 hover:border-orange-500/30'
+                }`}
+              >
                 View All Research Areas
               </button>
             </div>

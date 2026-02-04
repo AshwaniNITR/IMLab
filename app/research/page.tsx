@@ -1,7 +1,7 @@
 // app/research/page.tsx
 'use client';
 import Navbar from '@/components/Navbar';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 
 interface ResearchItem {
@@ -15,28 +15,39 @@ interface ResearchItem {
 }
 
 export default function Research() {
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [researchData, setResearchData] = useState<ResearchItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [scrollToItemId, setScrollToItemId] = useState<string | null>(null);
+  const itemRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
   };
+
+  // Check for scrollToItemId on mount
+  useEffect(() => {
+    const storedItemId = sessionStorage.getItem('scrollToItemId');
+    if (storedItemId) {
+      setScrollToItemId(storedItemId);
+      // Clear it after reading
+      sessionStorage.removeItem('scrollToItemId');
+    }
+  }, []);
 
   // Fetch data from API
   useEffect(() => {
     const fetchResearchData = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('/api/rscope');
+        const response = await fetch('https://im-lab.vercel.app/api/rscope');
         
         if (!response.ok) {
           throw new Error('Failed to fetch research data');
         }
         
         const data = await response.json();
-        console.log('Fetched data:', data);
         
         // Map API data to our format
         const formattedData = data.projects?.map((item: any) => ({
@@ -62,6 +73,29 @@ export default function Research() {
     fetchResearchData();
   }, []);
 
+  // Scroll to specific item after data is loaded
+  useEffect(() => {
+    if (scrollToItemId && researchData.length > 0 && !isLoading) {
+      // Small delay to ensure DOM is ready
+      setTimeout(() => {
+        const element = itemRefs.current[scrollToItemId];
+        if (element) {
+          element.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'center'
+          });
+          
+          // Add highlight effect
+          element.classList.add('ring-4', 'ring-orange-500/50');
+          setTimeout(() => {
+            element.classList.remove('ring-4', 'ring-orange-500/50');
+          }, 2000);
+        }
+        setScrollToItemId(null);
+      }, 300);
+    }
+  }, [scrollToItemId, researchData, isLoading]);
+
   // Format date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -86,16 +120,11 @@ export default function Research() {
           transition={{ duration: 0.5 }}
           className="mb-12 text-center"
         >
-          <h1 className={`text-4xl md:text-5xl font-bold mb-4 ${
-            isDarkMode ? 'text-white' : 'text-gray-900'
-          }`}>
-            Research Projects
+          <h1 className='text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent'>
+            Research Scope
           </h1>
-          <p className={`text-lg max-w-3xl mx-auto ${
-            isDarkMode ? 'text-gray-300' : 'text-gray-600'
-          }`}>
-            Explore our cutting-edge research in integrated systems, hardware design, and AI innovation.
-          </p>
+          <div className="w-24 h-1 bg-gradient-to-r from-orange-500 to-orange-600 mx-auto mb-6 rounded-full"></div>
+        
         </motion.div>
 
         {/* Loading State */}
@@ -131,95 +160,98 @@ export default function Research() {
               const isImageLeft = index % 2 === 0;
               
               return (
-                <motion.div
+                <div
                   key={item._id}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className={`rounded-2xl overflow-hidden shadow-2xl ${
-                    isDarkMode 
-                      ? 'bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700/30' 
-                      : 'bg-white border border-gray-200'
-                  }`}
+                  ref={(el) => {
+                    if (el) {
+                      itemRefs.current[item._id] = el;
+                    }
+                  }}
+                  className="transition-all duration-300"
                 >
-                  <div className="p-8">
-                    <div className={`flex flex-col lg:flex-row gap-8 items-center ${
-                      isImageLeft ? 'lg:flex-row' : 'lg:flex-row-reverse'
-                    }`}>
-                      {/* Image Section */}
-                      <div className="lg:w-1/2 w-full">
-                        <div className="relative rounded-xl overflow-hidden shadow-lg">
-                          <img
-                            src={item.imageUrlTwo || item.imageUrlOne}
-                            alt={item.title}
-                            className="w-full h-64 md:h-80 object-cover hover:scale-105 transition-transform duration-500"
-                            onError={(e) => {
-                              // Fallback to imageUrlOne if imageUrlTwo fails
-                              if (item.imageUrlOne && e.currentTarget.src !== item.imageUrlOne) {
-                                e.currentTarget.src = item.imageUrlOne;
-                              } else {
-                                // Fallback placeholder
-                                e.currentTarget.src = '/images/placeholder.jpg';
-                                e.currentTarget.classList.add('opacity-50');
-                              }
-                            }}
-                          />
-                          <div className={`absolute inset-0 border-2 ${
-                            isDarkMode ? 'border-gray-700/30' : 'border-gray-200/30'
-                          } rounded-xl pointer-events-none`}></div>
-                        </div>
-                        
-                        {/* Brief Section below image */}
-                        <div className="mt-6">
-                          <h3 className={`text-lg font-semibold mb-3 ${
-                            isDarkMode ? 'text-orange-400' : 'text-orange-600'
-                          }`}>
-                            Project Brief
-                          </h3>
-                          <p className={`text-sm leading-relaxed ${
-                            isDarkMode ? 'text-gray-300' : 'text-gray-600'
-                          }`}>
-                            {item.brief}
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Content Section */}
-                      <div className="lg:w-1/2 w-full">
-                        <div className="mb-4">
-                          <span className={`text-xs font-medium px-3 py-1 rounded-full ${
-                            isDarkMode 
-                              ? 'bg-orange-500/20 text-orange-400' 
-                              : 'bg-orange-100 text-orange-700'
-                          }`}>
-                            Research Project
-                          </span>
-                          {/* <span className={`text-xs ml-3 px-3 py-1 rounded-full ${
-                            isDarkMode 
-                              ? 'bg-gray-700/50 text-gray-300' 
-                              : 'bg-gray-100 text-gray-600'
-                          }`}>
-                            {formatDate(item.createdAt)}
-                          </span> */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className={`rounded-2xl overflow-hidden shadow-2xl ${
+                      isDarkMode 
+                        ? 'bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700/30' 
+                        : 'bg-white border border-gray-200'
+                    }`}
+                  >
+                    <div className="p-8">
+                      <div className={`flex flex-col lg:flex-row gap-8 items-center ${
+                        isImageLeft ? 'lg:flex-row' : 'lg:flex-row-reverse'
+                      }`}>
+                        {/* Image Section */}
+                        <div className="lg:w-1/2 w-full">
+                          <div className="relative rounded-xl overflow-hidden shadow-lg">
+                            <img
+                              src={item.imageUrlTwo || item.imageUrlOne}
+                              alt={item.title}
+                              className="w-full h-64 md:h-80 object-cover hover:scale-105 transition-transform duration-500"
+                              onError={(e) => {
+                                // Fallback to imageUrlOne if imageUrlTwo fails
+                                if (item.imageUrlOne && e.currentTarget.src !== item.imageUrlOne) {
+                                  e.currentTarget.src = item.imageUrlOne;
+                                } else {
+                                  // Fallback placeholder
+                                  e.currentTarget.src = '/images/placeholder.jpg';
+                                  e.currentTarget.classList.add('opacity-50');
+                                }
+                              }}
+                            />
+                            <div className={`absolute inset-0 border-2 ${
+                              isDarkMode ? 'border-gray-700/30' : 'border-gray-200/30'
+                            } rounded-xl pointer-events-none`}></div>
+                          </div>
+                          
+                          {/* Brief Section below image */}
+                          <div className="mt-6">
+                            <h3 className={`text-lg font-semibold mb-3 ${
+                              isDarkMode ? 'text-orange-400' : 'text-orange-600'
+                            }`}>
+                              Project Brief
+                            </h3>
+                            <p className={`text-sm leading-relaxed ${
+                              isDarkMode ? 'text-gray-300' : 'text-gray-600'
+                            }`}>
+                              {item.brief}
+                            </p>
+                          </div>
                         </div>
 
-                        <h2 className={`text-2xl md:text-3xl font-bold mb-4 ${
-                          isDarkMode ? 'text-white' : 'text-gray-900'
-                        }`}>
-                          {item.title}
-                        </h2>
+                        {/* Content Section */}
+                        <div className="lg:w-1/2 w-full">
+                          <div className="mb-4">
+                            <span className={`text-xs font-medium px-3 py-1 rounded-full ${
+                              isDarkMode 
+                                ? 'bg-orange-500/20 text-orange-400' 
+                                : 'bg-orange-100 text-orange-700'
+                            }`}>
+                              Research Project
+                            </span>
+                   
+                          </div>
 
-                        <div className={`text-lg leading-relaxed mb-6 ${
-                          isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                        }`}>
-                          {item.description}
+                          <h2 className={`text-2xl md:text-3xl font-bold mb-4 ${
+                            isDarkMode ? 'text-white' : 'text-gray-900'
+                          }`}>
+                            {item.title}
+                          </h2>
+
+                          <div className={`text-lg leading-relaxed mb-6 ${
+                            isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                          }`}>
+                            {item.description}
+                          </div>
+
+                      
                         </div>
-
-                 
                       </div>
                     </div>
-                  </div>
-                </motion.div>
+                  </motion.div>
+                </div>
               );
             })}
           </div>
@@ -250,7 +282,7 @@ export default function Research() {
           </div>
         )}
 
-        
+      
       </div>
     </main>
   );
