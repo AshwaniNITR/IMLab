@@ -1,3 +1,4 @@
+export const runtime = 'nodejs';
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/app/lib/dbConnect'; // Assuming you have a dbConnect utility
 import News, { INews } from '@/app/models/News'; // Adjust path as needed
