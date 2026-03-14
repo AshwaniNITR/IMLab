@@ -241,7 +241,7 @@ export default function Research() {
                             {item.title}
                           </h2>
 
-                          <div className={`text-lg leading-relaxed mb-6 ${
+                          <div className={`text-lg text-justify leading-relaxed mb-6 ${
                             isDarkMode ? 'text-gray-300' : 'text-gray-700'
                           }`}>
                             {item.description}
