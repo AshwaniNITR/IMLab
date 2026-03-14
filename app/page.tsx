@@ -8,6 +8,7 @@ import News from '@/components/News';
 import ResearchScope from '@/components/ResearchScope';
 import Footer from '@/components/Footer';
 import RecentPublications from '@/components/RecentPublications';
+import Slider from '@/components/Slider'
 
 export default function Home() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -31,11 +32,12 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             <div className="space-y-4">
               <HeroSection isDarkMode={isDarkMode} />
+              <News isDarkMode={isDarkMode} />
             </div>
 
             <div className="space-y-4">
               <AboutUs isDarkMode={isDarkMode} />
-              <News isDarkMode={isDarkMode} />
+              <Slider isDarkMode={isDarkMode} />
             </div>
           </div>
 
