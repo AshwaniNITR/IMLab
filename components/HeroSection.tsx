@@ -215,7 +215,7 @@ export default function HeroSection({ isDarkMode }: HeroSectionProps) {
     opacity-0 group-hover:opacity-100 transition
     bg-black text-white text-sm px-3 py-1 rounded whitespace-nowrap"
                 >
-                  +91 9876543210
+                  +91 6612462473
                 </span>
               </div>
             </motion.div>
