@@ -13,19 +13,15 @@ export default function Footer() {
     {
       title: "Quick Links",
       links: [
-        "OneCampus Portal",
-        "Brightspace",
-        "Campus News",
-        "Information Technology",
+        "NIT Rourkela",
+        "Department of Electronics and Communication, NIT Rourkela",
+        "ICSENSE TECH PVT LTD",
       ],
     },
     {
       title: "Academics & Research",
       links: [
-        "Schools & Programs",
-        "Research Centers",
-        "Industry Collaborations",
-        "Physical Facilities",
+        "Sougata Kar",
       ],
     },
     {
@@ -113,12 +109,11 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-700 pt-8 mt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-sm text-gray-400">
-              © {new Date().getFullYear()} National Institute of Technology
-              Rourkela. All Rights Reserved.
-            </p>
-            <div className="flex space-x-6 text-sm text-gray-400">
+          <div className="flex justify-center text-center  flex-row md:flex-row items-center space-y-4 md:space-y-0">
+            <div className="text-sm text-center text-gray-400">
+              © {new Date().getFullYear()} Integrated System Design Lab (ISDL), NIT Rourkela. All rights reserved.
+            </div>
+            {/* <div className="flex space-x-6 text-sm text-gray-400">
               <a className="hover:text-orange-300 cursor-pointer transition-colors">
                 Privacy Policy
               </a>
@@ -130,7 +125,7 @@ export default function Footer() {
               <a className="hover:text-orange-300 cursor-pointer transition-colors">
                 Sitemap
               </a>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
