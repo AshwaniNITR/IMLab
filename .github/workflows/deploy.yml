@@ -9,7 +9,7 @@ jobs:
 deploy:
 runs-on: ubuntu-latest
 
-```
+
 steps:
   - name: Checkout
     uses: actions/checkout@v4
@@ -39,4 +39,4 @@ steps:
           -p 3000:3000 \
           --env-file .env \
           ghcr.io/${{ github.repository }}/imlab-host:latest
-```
+
