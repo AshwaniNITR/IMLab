@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://isdl.icsense.in/sitemap.xml
+# Keywords: isdl lab nit rkl, instrumentation system design lab, nit rourkela labs, sougata kar labs
+
+
