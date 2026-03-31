@@ -206,7 +206,7 @@ export default function HeroSection({ isDarkMode }: HeroSectionProps) {
 
               {/* Phone Icon */}
               <div className="relative group">
-                <a href="tel:+919876543210">
+                <a href="tel:+916612462473">
                   <Phone className="w-7 h-7 text-orange-500 cursor-pointer hover:scale-110 transition-transform" />
                 </a>
 
