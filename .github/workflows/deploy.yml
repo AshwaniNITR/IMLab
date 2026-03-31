@@ -17,10 +17,10 @@ jobs:
         run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Build Docker image
-        run: docker build -t ghcr.io/${{ github.repository }}/imlab-host:latest .
+        run: docker build -t ghcr.io/ashwaninitr/imlab-host:latest .
 
       - name: Push Docker image
-        run: docker push ghcr.io/${{ github.repository }}/imlab-host:latest
+        run: docker push ghcr.io/ashwaninitr/imlab-host:latest
 
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.3
@@ -29,7 +29,7 @@ jobs:
           username: root
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            docker pull ghcr.io/${{ github.repository }}/imlab-host:latest
+            docker pull ghcr.io/ashwaninitr/imlab-host:latest
             docker stop imlab || true
             docker rm imlab || true
             docker run -d \
@@ -37,4 +37,4 @@ jobs:
               --restart unless-stopped \
               -p 3000:3000 \
               --env-file .env \
-              ghcr.io/${{ github.repository }}/imlab-host:latest
+              ghcr.io/ashwaninitr/imlab-host:latest
