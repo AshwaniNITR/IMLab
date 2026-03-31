@@ -11,7 +11,7 @@ runs-on: ubuntu-latest
 
 
 steps:
-  - name: Checkout
+  - name: Checkout code
     uses: actions/checkout@v4
 
   - name: Login to GHCR
@@ -23,7 +23,7 @@ steps:
   - name: Push Docker image
     run: docker push ghcr.io/${{ github.repository }}/imlab-host:latest
 
-  - name: Deploy to VPS via SSH
+  - name: Deploy to VPS
     uses: appleboy/ssh-action@v1.0.3
     with:
       host: ${{ secrets.VPS_HOST }}
