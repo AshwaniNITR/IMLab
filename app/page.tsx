@@ -1,6 +1,6 @@
 // app/page.tsx
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
 import AboutUs from '@/components/AboutUs';
@@ -11,12 +11,38 @@ import RecentPublications from '@/components/RecentPublications';
 import Slider from '@/components/Slider'
 
 export default function Home() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      const stored = sessionStorage.getItem("theme");
+      return stored ? JSON.parse(stored) : false;
+    }
+    return false;
+  });
 
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-  };
+ const initializeTheme = (): boolean => {
+  if (typeof window === "undefined") return false;
 
+  const storedTheme = sessionStorage.getItem("theme");
+
+  if (storedTheme !== null) {
+    return JSON.parse(storedTheme);
+  }
+
+  // Optional default: system preference
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  return prefersDark;
+};
+useEffect(() => {
+  const theme = initializeTheme();
+  setIsDarkMode(theme);
+}, []);
+const toggleTheme = () => {
+  setIsDarkMode((prev) => {
+    const newValue = !prev;
+    sessionStorage.setItem("theme", JSON.stringify(newValue));
+    return newValue;
+  });
+};
   return (
     <main
       className={`min-h-screen transition-colors duration-300 ${
