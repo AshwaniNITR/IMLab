@@ -48,14 +48,24 @@ interface VacancyData {
 }
 
 export default function VacancyPage() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+  if (typeof window !== "undefined") {
+    const stored = sessionStorage.getItem("theme");
+    return stored ? JSON.parse(stored) : false;
+  }
+  return false;
+});
   const [vacancy, setVacancy] = useState<VacancyData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-  };
+ const toggleTheme = () => {
+  setIsDarkMode((prev) => {
+    const newValue = !prev;
+    sessionStorage.setItem("theme", JSON.stringify(newValue));
+    return newValue;
+  });
+};
 
   useEffect(() => {
     fetchVacancy();

@@ -33,7 +33,13 @@ const typeColors = {
 };
 
 export default function PublicationsClient() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      const stored = sessionStorage.getItem("theme");
+      return stored ? JSON.parse(stored) : false;
+    }
+    return false;
+  });
   const [publications, setPublications] = useState<PublicationItem[]>([]);
   const [filteredPublications, setFilteredPublications] = useState<
     PublicationItem[]
@@ -49,9 +55,30 @@ export default function PublicationsClient() {
   const router = useRouter();
   const initialType = searchParams.get("type");
 
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-  };
+ const initializeTheme = (): boolean => {
+  if (typeof window === "undefined") return false;
+
+  const storedTheme = sessionStorage.getItem("theme");
+
+  if (storedTheme !== null) {
+    return JSON.parse(storedTheme);
+  }
+
+  // Optional default: system preference
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  return prefersDark;
+};
+useEffect(() => {
+  const theme = initializeTheme();
+  setIsDarkMode(theme);
+}, []);
+const toggleTheme = () => {
+  setIsDarkMode((prev) => {
+    const newValue = !prev;
+    sessionStorage.setItem("theme", JSON.stringify(newValue));
+    return newValue;
+  });
+};
 
   // Fetch all publications
   const fetchPublications = useCallback(async () => {
