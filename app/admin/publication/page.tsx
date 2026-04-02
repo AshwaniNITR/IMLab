@@ -1,5 +1,4 @@
 import PublicationsClient from "@/app/admin/components/PublicationClient";
-import { P } from "framer-motion/dist/types.d-a9pt5qxk";
 import { Suspense } from "react";
 
 export default function PublicationsPage() {
