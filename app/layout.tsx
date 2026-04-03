@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 //   description: "Official website of the Integrated System Design Lab",
 // };
 export const metadata: Metadata = {
-  title: "Integrated System Design Lab (ISDL) | NIT Rourkela",
+  title: "Integrated System Design Lab | NIT Rourkela| ISDL NIT Rourkela",
   description:
     "Official website of Integrated System Design Lab (ISDL) at NIT Rourkela — Focused on research in integrated circuit design, embedded systems, MEMS sensors, and low-power instrumentation.",
   icons: {
@@ -26,6 +26,9 @@ export const metadata: Metadata = {
     apple: "/favicon.ico",
   },
   keywords: [
+    "Integrated System Design Lab NIT Rourkela",
+     "Integrated System Design Lab nit rkl",
+      "Integrated System Design Lab nit rourkela",
     "nit rkl lab",
     "nit rourkela lab",
     "isdl nit rkl",
@@ -33,7 +36,6 @@ export const metadata: Metadata = {
     "isdl icsense",
     "Sougata Kar Lab",
     "ISDL",
-    "Integrated System Design Lab",
     "NIT Rourkela",
     "IC Design Laboratory",
     "MEMS Sensors Laboratory",
